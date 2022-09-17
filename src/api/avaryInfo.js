@@ -58,5 +58,13 @@ export default {
             data: avaryVo
 
         })
+    },
+    searchCoupleByCondition(avaryVo) {
+        return request({
+            url: `/service/avary-info/getCouple`,
+            method: 'post',
+            data: avaryVo
+
+        })
     }
 }

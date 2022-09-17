@@ -31,7 +31,17 @@
 
       <el-table-column label="卡片图" align="center">
         <template slot-scope="scope">
-          <div class="demo-image__preview">
+          <el-popover
+            placement="right"
+            width="400"
+            trigger="click"
+            v-if="scope.row.url"
+          >
+            <el-image :src="scope.row.url"></el-image>
+            <el-button slot="reference" size="mini">查看</el-button>
+          </el-popover>
+
+          <!-- <div class="demo-image__preview">
             <el-image
               style="width: 250px; height: 250px"
               :src="scope.row.url"
@@ -41,7 +51,7 @@
                 <i class="el-icon-picture-outline"></i>
               </div>
             </el-image>
-          </div>
+          </div> -->
         </template>
       </el-table-column>
 
@@ -137,7 +147,7 @@ export default {
     },
     del(row) {
       console.log(row.id);
-      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除该卡片信息, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",

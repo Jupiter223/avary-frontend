@@ -29,28 +29,6 @@
         </el-select>
       </el-form-item>
 
-      <!-- <el-form-item label="性别">
-        <el-select v-model="formInline.gender" placeholder="性别">
-          <el-option label="公" value="公"></el-option>
-          <el-option label="母" value="母"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="出生年份">
-        <el-input v-model="formInline.year" placeholder="2022"></el-input>
-      </el-form-item> -->
-
-      <!-- <el-form-item label="是否存活">
-        <el-select v-model="formInline.isDead" placeholder="是否存活">
-          <el-option label="存活" value="false"></el-option>
-          <el-option label="死亡" value="true"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="是否离场">
-        <el-select v-model="formInline.isOut" placeholder="是否离场">
-          <el-option label="离场" value="true"></el-option>
-          <el-option label="在场" value="false"></el-option>
-        </el-select>
-      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" @click="onSubmit">查询</el-button>
       </el-form-item>
@@ -167,16 +145,16 @@
 import couple from "@/api/couple";
 var moment = require("moment");
 export default {
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: "success",
-        draft: "gray",
-        deleted: "danger",
-      };
-      return statusMap[status];
-    },
-  },
+  // filters: {
+  //   statusFilter(status) {
+  //     const statusMap = {
+  //       published: "success",
+  //       draft: "gray",
+  //       deleted: "danger",
+  //     };
+  //     return statusMap[status];
+  //   },
+  // },
   data() {
     return {
       list: null,
@@ -186,16 +164,7 @@ export default {
       limit: 20,
       total: 1,
       input1: "",
-      options: [
-        {
-          value: "选项1",
-          label: "黄金糕",
-        },
-        {
-          value: "选项2",
-          label: "双皮奶",
-        },
-      ],
+
       formInline: {
         id: "",
         parentList: [],

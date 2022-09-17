@@ -1,10 +1,25 @@
 <template>
   <div class="app-container">
-    <el-form ref="form" :model="form" label-width="120px">
-      <el-form-item label="父母昵称">
-        <el-input v-model="form.parentNickname" />
+    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+      <el-form-item label="脚环号">
+        <el-input v-model="formInline.ring" placeholder="脚环号"></el-input>
+      </el-form-item>
+      <el-form-item label="昵称">
+        <el-input v-model="formInline.nickname" placeholder="昵称"></el-input>
+      </el-form-item>
+      <el-form-item label="位置">
+        <el-input v-model="formInline.location" placeholder="位置"></el-input>
       </el-form-item>
 
+      <el-form-item>
+        <el-button type="primary" @click="onSearch"
+          >亲鸟查询(精确查询)</el-button
+        >
+      </el-form-item>
+    </el-form>
+    <el-form ref="form" :model="form" label-width="120px">
+      <el-form-item label="亲鸟昵称">{{ form.parentNickname }} </el-form-item>
+      <el-form-item label="亲鸟笼编号">{{ form.parentLocation }} </el-form-item>
       <el-form-item label="品种">
         <el-select v-model="form.species" placeholder="选择品种">
           <el-option label="金凯" value="金凯" />
@@ -141,10 +156,16 @@
 
 <script>
 import breeder from "@/api/breeder";
+import avaryInfo from "@/api/avaryInfo";
 export default {
   data() {
     return {
       uploadUrl: process.env.VUE_APP_BASE_API + "fileoss",
+      formInline: {
+        parentLocation: "",
+        parentNickname: "",
+      },
+      list: {},
       form: {
         id: "",
         parentLocation: "",
@@ -167,6 +188,10 @@ export default {
 
       this.getInfo(id);
     }
+    if (this.$route.params && this.$route.params.parentId) {
+      const id = this.$route.params.parentId;
+      this.getInfoWithCount(id);
+    }
   },
   methods: {
     getInfo(id) {
@@ -174,6 +199,37 @@ export default {
         console.log(res);
         this.form = res.data.info;
       });
+    },
+    getInfoWithCount(id) {
+      breeder.getEggCount(id).then((res) => {
+        console.log(res);
+        this.form = res.data.info;
+      });
+      console.log(this.$route.params.parentLocation);
+      console.log(this.$route.params.parentNickname);
+      this.form.parentLocation = this.$route.params.parentLocation;
+      this.form.parentNickname = this.$route.params.parentNickname;
+    },
+    onSearch() {
+      avaryInfo
+        .searchCoupleByCondition(this.formInline)
+        .then((res) => {
+          console.log(res.data);
+          const coupleId = res.data.coupleId;
+          console.log(coupleId);
+          this.$router.push({
+            path: "/couple/info/" + coupleId,
+            name: "coupleInfo",
+            params: { id: coupleId },
+          });
+        })
+        .catch((res) => {
+          // this.$message({
+          //   type: "error",
+          //   message: res.message,
+          // });
+        });
+      this.formInline = {};
     },
 
     onSubmit() {

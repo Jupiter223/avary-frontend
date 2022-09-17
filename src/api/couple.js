@@ -9,6 +9,9 @@ export default {
         })
 
     },
+
+
+
     // getById(id) {
     //     return request({
     //         url: `/service/card/getbyid/${id}`,
@@ -32,13 +35,13 @@ export default {
 
     //     })
     // },
-    // remove(id) {
-    //     return request({
-    //         url: `/service/card/${id}`,
-    //         method: 'delete'
+    remove(id) {
+        return request({
+            url: `/service/couple-info/${id}`,
+            method: 'delete'
 
-    //     })
-    // }
+        })
+    },
 
     addByList(list) {
         return request({

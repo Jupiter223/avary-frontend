@@ -153,13 +153,13 @@ export const constantRoutes = [
       },
       {
         path: '/egg/add',
-        name: 'add',
+        name: 'eggAdd',
         component: () => import('@/views/breeder/eggadd'),
         meta: { title: '添加蛋', icon: 'form' }
       },
       {
         path: '/egg/edit/:id',
-        name: 'edit',
+        name: 'eggEdit',
         component: () => import('@/views/breeder/eggadd'),
         meta: { title: '编辑蛋', noCache: true },
         // hidden: true
@@ -178,7 +178,7 @@ export const constantRoutes = [
       },
       {
         path: '/nestling/edit/:id',
-        name: 'edit',
+        name: 'nestlingEdit',
         component: () => import('@/views/breeder/hatchadd'),
         meta: { title: '编辑雏鸟', noCache: true },
         hidden: true

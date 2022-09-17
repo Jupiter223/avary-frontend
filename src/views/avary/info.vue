@@ -301,6 +301,13 @@ export default {
           type: "error",
           message: "需选中两项!",
         });
+      } else if (
+        this.multipleSelection[0].gender == this.multipleSelection[1].gender
+      ) {
+        this.$message({
+          type: "error",
+          message: "性别不能相同!",
+        });
       } else {
         couple.addByList(this.multipleSelection).then((res) => {
           this.$message({
@@ -372,7 +379,7 @@ export default {
     },
     del(row) {
       console.log(row.id);
-      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除该鸟资料, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",

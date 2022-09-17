@@ -296,6 +296,10 @@
         </el-table-column>
       </el-table>
     </div>
+    <el-button type="info" size="mini" @click="addNewEgg()"
+      >添加蛋确认</el-button
+    >
+    <el-button type="info" size="mini" @click="del(scope.row)">出壳</el-button>
   </div>
 </template>
 
@@ -318,7 +322,9 @@ export default {
   data() {
     return {
       parentId: "",
-      list: null,
+      parentNickname: "",
+      parentLocation: "",
+      list: [],
       listLoading: true,
       listLoading1: true,
       listLoading2: true,
@@ -327,7 +333,6 @@ export default {
       limit: 20,
       total: 1,
       input1: "",
-
       formInline: {
         id: "",
         parentList: [],
@@ -358,8 +363,10 @@ export default {
     fetchData(id) {
       this.listLoading = true;
       avary.getByCoupleId(id).then((response) => {
-        console.log(response);
         this.list = response.data.info;
+
+        this.parentLocation = this.list[0].location;
+        this.parentNickname = this.list[0].nickname;
         this.listLoading = false;
       });
       this.listLoading1 = true;
@@ -418,7 +425,12 @@ export default {
       this.$router.push({
         path: "/egg/info",
         name: "Result",
-        params: { list: "list" },
+        params: {
+          list: {
+            parentNickname,
+            parentLocation,
+          },
+        },
       });
     },
     edit(row) {
@@ -454,6 +466,17 @@ export default {
               message: "已取消删除",
             });
           });
+      });
+    },
+    addNewEgg() {
+      this.$router.push({
+        path: "/egg/add",
+        name: "eggAdd",
+        params: {
+          parentId: this.parentId,
+          parentLocation: this.parentLocation,
+          parentNickname: this.parentNickname,
+        }, //传品种和位置和昵称
       });
     },
   },

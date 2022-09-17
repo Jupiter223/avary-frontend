@@ -49,6 +49,13 @@ export default {
 
         })
     },
+    getEggCount(id) {
+        return request({
+            url: `/service/egg-info/getCount/${id}`,
+            method: 'get',
+
+        })
+    },
 
     getNestlingById(id) {
         return request({
