@@ -57,6 +57,14 @@
 
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
+          <el-button
+            v-if="showButton"
+            type="warning"
+            size="mini"
+            plain
+            @click="jumpToAddCard(scope.row)"
+            >选中卡片并返回</el-button
+          >
           <router-link :to="'/card/edit/' + scope.row.id">
             <el-button @click="edit(scope.row)" type="warning" size="mini"
               >编辑</el-button
@@ -107,7 +115,9 @@ export default {
       limit: 20,
       total: 1,
       input1: "",
-
+      showButton: false,
+      add: false,
+      edit: false,
       formInline: {
         ring: "",
       },
@@ -115,6 +125,26 @@ export default {
   },
   created() {
     this.fetchData();
+
+    console.log(this.$route.params);
+    if (this.$route.params) {
+      if (this.$route.params.path == "/avary/add") {
+        this.showButton = true;
+        this.add = true;
+      } else {
+        this.showButton = true;
+        this.edit = true;
+      }
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    if (to.name == "avaryAdd" || to.name == "avaryEdit") {
+      console.log(to);
+      to.meta.keepAlive = true;
+    } else {
+      to.meta.keepAlive = false;
+    }
+    next();
   },
   methods: {
     fetchData() {
@@ -152,7 +182,6 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       }).then(() => {
-        // 调用删除api
         card
           .remove(row.id)
           .then((res) => {
@@ -176,6 +205,20 @@ export default {
             });
           });
       });
+    },
+    jumpToAddCard(row) {
+      this.select = row;
+      // this.$router.push({
+      //   path: "/egg/info",
+      //   name: "Result",
+      //   params: {
+      //     list: {
+      //       parentNickname,
+      //       parentLocation,
+      //     },
+      //   },
+      // });
+      this.$router.go(-1);
     },
   },
 };

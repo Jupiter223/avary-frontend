@@ -78,6 +78,7 @@
             type="date"
             placeholder="选择出生日期"
             style="width: 100%"
+            :default-value="timeDefaultShow"
           />
         </el-col>
       </el-form-item>
@@ -157,6 +158,7 @@
 <script>
 import breeder from "@/api/breeder";
 import avaryInfo from "@/api/avaryInfo";
+import moment from "moment";
 export default {
   data() {
     return {
@@ -165,6 +167,7 @@ export default {
         parentLocation: "",
         parentNickname: "",
       },
+      timeDefaultShow: "",
       list: {},
       form: {
         id: "",
@@ -192,6 +195,11 @@ export default {
       const id = this.$route.params.parentId;
       this.getInfoWithCount(id);
     }
+  },
+  mounted() {
+    this.timeDefaultShow = moment(new Date()).format("yyyy-MM-DD");
+    console.log(this.timeDefaultShow);
+    this.form.birthday = this.timeDefaultShow;
   },
   methods: {
     getInfo(id) {
@@ -279,9 +287,10 @@ export default {
     },
     onCancel() {
       this.$message({
-        message: "cancel!",
+        message: "取消!",
         type: "warning",
       });
+      this.$router.go(-1);
     },
 
     handlePreview(file) {

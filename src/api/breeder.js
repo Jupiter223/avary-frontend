@@ -134,4 +134,21 @@ export default {
 
         })
     },
+
+    recordHatch(eggInfo) {
+        return request({
+            url: `/service/egg-info/recordHatch`,
+            method: 'post',
+            data: eggInfo
+
+        })
+    },
+    updateDeath(nestling) {
+        return request({
+            url: `/service/nestling/updateDeath`,
+            method: 'post',
+            data: nestling
+
+        })
+    },
 }

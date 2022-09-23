@@ -38,5 +38,12 @@ export default {
             method: 'delete'
 
         })
+    },
+    searchCard(ring) {
+        return request({
+            url: `/service/card/searchCard/${ring}`,
+            method: 'get',
+
+        })
     }
 }

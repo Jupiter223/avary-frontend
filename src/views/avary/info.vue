@@ -39,13 +39,13 @@
       </el-form-item>
 
       <el-form-item label="是否死亡">
-        <el-select v-model="formInline.isDead" placeholder="是否死亡">
+        <el-select v-model="formInline.death" placeholder="是否死亡">
           <el-option label="存活" value="0"></el-option>
           <el-option label="死亡" value="1"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="是否离场">
-        <el-select v-model="formInline.isOut" placeholder="是否离场">
+        <el-select v-model="formInline.outStatus" placeholder="是否离场">
           <el-option label="离场" value="1"></el-option>
           <el-option label="在场" value="0"></el-option>
         </el-select>
@@ -118,12 +118,12 @@
       </el-table-column>
       <el-table-column label="是否死亡" align="center">
         <template slot-scope="scope">
-          {{ scope.row.dead ? "死亡" : "存活" }}
+          {{ scope.row.death ? "死亡" : "存活" }}
         </template>
       </el-table-column>
       <el-table-column label="是否离场" align="center">
         <template slot-scope="scope">
-          {{ scope.row.out ? "是" : "否" }}
+          {{ scope.row.outStatus ? "是" : "否" }}
         </template>
       </el-table-column>
 
@@ -241,16 +241,7 @@ export default {
       limit: 20,
       total: 1,
       input1: "",
-      options: [
-        {
-          value: "选项1",
-          label: "黄金糕",
-        },
-        {
-          value: "选项2",
-          label: "双皮奶",
-        },
-      ],
+
       multipleSelection: [],
       formInline: {
         ring: "",
@@ -259,8 +250,8 @@ export default {
         gender: "",
         species: "",
         year: "",
-        isDead: "",
-        isOut: "",
+        death: "",
+        outStatus: "",
       },
       message: "",
     };
@@ -337,10 +328,10 @@ export default {
           this.formInline.year.trim() == "") &&
         (this.formInline.gender.trim() == null ||
           this.formInline.gender.trim() == "") &&
-        (this.formInline.isDead.trim() == null ||
-          this.formInline.isDead.trim() == "") &&
-        (this.formInline.isOut.trim() == null ||
-          this.formInline.isOut.trim() == "")
+        (this.formInline.death.trim() == null ||
+          this.formInline.death.trim() == "") &&
+        (this.formInline.outStatus.trim() == null ||
+          this.formInline.outStatus.trim() == "")
       ) {
         this.$message({
           type: "error",
@@ -358,8 +349,8 @@ export default {
           gender: "",
           species: "",
           year: "",
-          isDead: "",
-          isOut: "",
+          death: "",
+          outStatus: "",
         };
       });
     },

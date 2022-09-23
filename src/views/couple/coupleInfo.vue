@@ -23,10 +23,7 @@
       border
       fit
       highlight-current-row
-      @selection-change="handleSelectionChange"
-      ref="multipleTable"
     >
-      <el-table-column type="selection" width="55"> </el-table-column>
       <el-table-column align="center" label="序号" width="95">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
@@ -70,12 +67,12 @@
 
       <el-table-column label="是否死亡" align="center">
         <template slot-scope="scope">
-          {{ scope.row.dead ? "死亡" : "存活" }}
+          {{ scope.row.death ? "死亡" : "存活" }}
         </template>
       </el-table-column>
       <el-table-column label="是否离场" align="center">
         <template slot-scope="scope">
-          {{ scope.row.out ? "是" : "否" }}
+          {{ scope.row.outStatus ? "是" : "否" }}
         </template>
       </el-table-column>
 
@@ -113,9 +110,9 @@
             ></router-link
           >
 
-          <el-button type="info" size="mini" @click="del(scope.row)"
+          <!-- <el-button type="info" size="mini" @click="del(scope.row)"
             >删除</el-button
-          >
+          > -->
         </template>
       </el-table-column>
     </el-table>
@@ -128,7 +125,7 @@
         border
         fit
         highlight-current-row
-        @selection-change="handleSelectionChange"
+        @selection-change="handleSelectionChange1"
         ref="multipleTable"
       >
         <el-table-column type="selection" width="55"> </el-table-column>
@@ -160,6 +157,15 @@
         <el-table-column label="是否出壳" align="center">
           <template slot-scope="scope">
             {{ scope.row.hatch ? "出壳" : "未出壳" }}
+            <el-button
+              v-if="!scope.row.hatch"
+              type="success"
+              plain
+              size="mini"
+              style="padding-bottom: 3px"
+              @click="recordHatch(scope.row)"
+              >出壳</el-button
+            >
           </template>
         </el-table-column>
 
@@ -190,12 +196,22 @@
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <router-link :to="'/egg/edit/' + scope.row.id">
-              <el-button @click="edit(scope.row)" type="warning" size="mini"
+              <el-button
+                @click="editEgg(scope.row)"
+                type="warning"
+                plain
+                size="mini"
+                style="padding-bottom: 3px"
                 >编辑</el-button
               ></router-link
             >
 
-            <el-button type="info" size="mini" @click="del(scope.row)"
+            <el-button
+              type="info"
+              size="mini"
+              plain
+              @click="delEgg(scope.row)"
+              style="padding-bottom: 3px"
               >删除</el-button
             >
           </template>
@@ -209,7 +225,7 @@
         border
         fit
         highlight-current-row
-        @selection-change="handleSelectionChange"
+        @selection-change="handleSelectionChange2"
         ref="multipleTable"
       >
         <el-table-column type="selection" width="55"> </el-table-column>
@@ -253,11 +269,11 @@
             {{ scope.row.isOut ? "离场" : "未离场" }}
           </template>
         </el-table-column>
-        <el-table-column label="资料库" align="center">
+        <!-- <el-table-column label="资料库" align="center">
           <template slot-scope="scope">
             {{ scope.row.isTransfer ? "已添加" : "未添加" }}
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column label="备注" align="center">
           <template slot-scope="scope">
@@ -284,12 +300,20 @@
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <router-link :to="'/nestling/edit/' + scope.row.id">
-              <el-button @click="edit(scope.row)" type="warning" size="mini"
+              <el-button
+                @click="editNestling(scope.row)"
+                type="warning"
+                size="mini"
+                plain
                 >编辑</el-button
               ></router-link
             >
 
-            <el-button type="info" size="mini" @click="del(scope.row)"
+            <el-button
+              type="info"
+              size="mini"
+              @click="delNestling(scope.row)"
+              plain
               >删除</el-button
             >
           </template>
@@ -299,7 +323,13 @@
     <el-button type="info" size="mini" @click="addNewEgg()"
       >添加蛋确认</el-button
     >
-    <el-button type="info" size="mini" @click="del(scope.row)">出壳</el-button>
+    <el-button
+      style="text-align: right"
+      type="info"
+      size="mini"
+      @click="nestlingDie()"
+      >雏鸟死亡</el-button
+    >
   </div>
 </template>
 
@@ -325,6 +355,8 @@ export default {
       parentNickname: "",
       parentLocation: "",
       list: [],
+      multipleSelection1: [],
+      multipleSelection2: [],
       listLoading: true,
       listLoading1: true,
       listLoading2: true,
@@ -382,6 +414,23 @@ export default {
         this.listLoading2 = false;
       });
     },
+    toggleSelection(rows) {
+      if (rows) {
+        rows.forEach((row) => {
+          this.$refs.multipleTable.toggleRowSelection(row);
+        });
+      } else {
+        this.$refs.multipleTable.clearSelection();
+      }
+    },
+    handleSelectionChange1(val) {
+      console.log(val);
+      this.multipleSelection1 = val;
+    },
+    handleSelectionChange2(val) {
+      console.log(val);
+      this.multipleSelection2 = val;
+    },
     fetchEggData(id) {},
     onSubmit() {
       this.listLoading1 = true;
@@ -433,26 +482,67 @@ export default {
         },
       });
     },
-    edit(row) {
+    editEgg(row) {
       console.log(row.id);
+      this.$router.push({
+        path: "/egg/edit/" + row.id,
+        name: "eggEdit",
+      });
     },
-    del(row) {
+    delEgg(row) {
       console.log(row.id);
-      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除该蛋资料, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       }).then(() => {
         // 调用删除api
-        avaryInfo
-          .remove(row.id)
+        breeder
+          .removeEgg(row.id)
           .then((res) => {
             console.log(res);
             this.$message({
               type: "success",
               message: "删除成功!",
             });
-            this.fetchData();
+            this.fetchData(this.parentId);
+          })
+          .catch((res) => {
+            this.$message({
+              type: "error",
+              message: "删除失败!",
+            });
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消删除",
+            });
+          });
+      });
+    },
+    editNestling(row) {
+      this.$router.push({
+        path: "/nestling/edit/" + row.id,
+        name: "nestlingEdit",
+      });
+    },
+    delNestling(row) {
+      this.$confirm("此操作将永久删除该雏鸟资料, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        // 调用删除api
+        breeder
+          .removeNestling(row.id)
+          .then((res) => {
+            console.log(res);
+            this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+            this.fetchData(this.parentId);
           })
           .catch((res) => {
             this.$message({
@@ -478,6 +568,77 @@ export default {
           parentNickname: this.parentNickname,
         }, //传品种和位置和昵称
       });
+    },
+    recordHatch(row) {
+      this.$confirm(
+        "确定修改第" + row.nest + "窝第" + row.count + "个蛋的出壳状态?",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      )
+        .then(() => {
+          breeder
+            .recordHatch(row)
+            .then((res) => {
+              this.$message({
+                type: "success",
+                message: "添加出壳成功!",
+              });
+              this.fetchData(this.parentId);
+            })
+            .catch((res) => {
+              this.$message({
+                type: "error",
+                message: "添加出壳失败!",
+              });
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消",
+          });
+        });
+    },
+    nestlingDie() {
+      console.log(this.multipleSelection2);
+      this.$confirm(
+        "确定将选中的" +
+          this.multipleSelection2.length +
+          "个雏鸟的生存状态改为死亡?",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      )
+        .then(() => {
+          breeder
+            .updateDeath(this.multipleSelection2)
+            .then((res) => {
+              this.$message({
+                type: "success",
+                message: "修改成功!",
+              });
+              this.fetchData(this.parentId);
+            })
+            .catch((res) => {
+              this.$message({
+                type: "error",
+                message: "修改失败!",
+              });
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消",
+          });
+        });
     },
   },
 };

@@ -1,8 +1,27 @@
 <template>
+  <!-- <keep-alive> -->
   <div class="app-container">
     <el-form ref="form" :model="form" label-width="120px">
       <el-form-item label="脚环号">
         <el-input v-model="form.ring" />
+        <el-popover placement="right" width="400" trigger="click">
+          <i>点击选中卡片</i>
+          <el-image
+            v-for="card in cards"
+            :key="card"
+            :src="card"
+            @click="selcetPic(card)"
+          ></el-image>
+          <el-button slot="reference" size="mini" @click="searchCard()"
+            >在卡片库中寻找</el-button
+          >
+        </el-popover>
+        <!-- <i
+            class="el-icon-s-promotion"
+            style="display: flex; padding-top: 12px"
+            @click="jumpToCard()"
+            >在卡片库寻找</i
+          > -->
       </el-form-item>
       <el-form-item label="昵称">
         <el-input v-model="form.nickname" />
@@ -47,13 +66,13 @@
         </el-select>
       </el-form-item>
       <el-form-item label="是否死亡">
-        <el-select v-model="form.isDead" placeholder="选择生存情况">
+        <el-select v-model="form.death" placeholder="选择生存情况">
           <el-option label="生存" value="false" />
           <el-option label="死亡" value="true" />
         </el-select>
       </el-form-item>
       <el-form-item label="是否离场">
-        <el-select v-model="form.isOut" placeholder="选择离场情况">
+        <el-select v-model="form.outStatus" placeholder="选择离场情况">
           <el-option label="在场" value="false" />
           <el-option label="离场" value="true" />
         </el-select>
@@ -137,14 +156,16 @@
       </el-form-item>
     </el-form>
   </div>
+  <!-- </keep-alive> -->
 </template>
 
 <script>
-import avaryInfo from "@/api/avaryInfo";
+import card from "@/api/card";
 export default {
   data() {
     return {
       uploadUrl: process.env.VUE_APP_BASE_API + "fileoss",
+      jump: {},
       form: {
         id: "",
         ring: "",
@@ -152,13 +173,14 @@ export default {
         location: "",
         specie: "",
         birthday: "",
-        isDead: false,
-        isOut: false,
+        death: "",
+        outStatus: "",
         gender: "",
         otherInfo: "",
         cardPic: "",
         avaryPic: "",
       },
+      cards: [],
     };
   },
   created() {
@@ -168,16 +190,54 @@ export default {
       this.getInfo(id);
     }
   },
+  // beforeRouteEnter(to, from, next) {
+  //   // if (from.name == "cardInfo") {
+  //   //   console.log("22222");
+  //   // }
+  //   console.log(from);
+  // },
+
+  // beforeRouteLeave(to, from, next) {
+  //   // console.log(to);
+  //   if (to.name == "cardInfo") {
+  //     console.log("111111111");
+
+  //     console.log(this.form);
+  //   }
+
+  //   next();
+  // },
+  // activated() {
+  //   console.log("进入返回");
+  // },
+
   methods: {
     getInfo(id) {
       avaryInfo.getById(id).then((res) => {
         this.form = res.data.info;
-        console.log("up" + this.uploadUrl);
       });
+    },
+    searchCard() {
+      if (this.form.ring == null || this.form.ring == "") {
+        this.$message({
+          type: "error",
+          message: "请输入脚环号",
+        });
+      } else {
+        card.searchCard(this.form.ring).then((res) => {
+          console.log("触发");
+          this.cards = res.data.cards;
+          console.log(this.cards);
+        });
+      }
+    },
+    selcetPic(card) {
+      console.log(card);
+      this.form.cardPic = card;
     },
 
     onSubmit() {
-      console.log(this.form);
+      // console.log(this.form);
       if (this.form.id) {
         this.update();
       } else {
@@ -237,6 +297,16 @@ export default {
     handleSucessAvary(res, flie) {
       console.log(res);
       this.form.avaryPic = res.data.url;
+    },
+    jumpToCard() {
+      const path = this.$route.path;
+      this.$router.push({
+        path: "/card/info",
+        name: "cardInfo",
+        params: {
+          path: path,
+        },
+      });
     },
   },
 };

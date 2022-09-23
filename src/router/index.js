@@ -87,20 +87,30 @@ export const constantRoutes = [
         path: '/avary/avaryInfo',
         name: 'avaryInfo',
         component: () => import('@/views/avary/info'),
-        meta: { title: '鸟列表', icon: 'table' }
+        meta: {
+          title: '鸟列表', icon: 'table'
+        }
       },
       {
         path: '/avary/add',
-        name: 'add',
+        name: 'avaryAdd',
         component: () => import('@/views/avary/add'),
-        meta: { title: '添加鸟', icon: 'form' }
+        meta: {
+          title: '添加鸟', icon: 'form'
+          // , keepAlive: true// 组件缓存
+          // refresh: false // activated钩子触发时是否重新加载数据
+        }
       },
       {
         path: '/avary/edit/:id',
-        name: 'edit',
+        name: 'avaryEdit',
         component: () => import('@/views/avary/add'),
-        meta: { title: '编辑鸟', noCache: true },
-        hidden: true
+        meta: {
+          title: '编辑鸟', noCache: true,
+          // keepAlive: true, // 组件缓存
+          // refresh: false, // activated钩子触发时是否重新加载数据 },
+
+        }, hidden: true
       }
     ]
   },
@@ -121,7 +131,8 @@ export const constantRoutes = [
         path: '/couple/info/:id',
         name: 'coupleInfo',
         component: () => import('@/views/couple/coupleInfo'),
-        meta: { title: '种鸟详情', icon: 'form' }
+        meta: { title: '种鸟详情', icon: 'form' },
+        hidden: true
       },
       {
         path: '/couple/add',
@@ -162,7 +173,7 @@ export const constantRoutes = [
         name: 'eggEdit',
         component: () => import('@/views/breeder/eggadd'),
         meta: { title: '编辑蛋', noCache: true },
-        // hidden: true
+        hidden: true
       },
       {
         path: '/nestling/info',
@@ -209,6 +220,41 @@ export const constantRoutes = [
         name: 'edit',
         component: () => import('@/views/card/add'),
         meta: { title: '编辑卡片', noCache: true },
+        hidden: true
+      }
+    ]
+  },
+  {
+    path: '/stock',
+    component: Layout,
+    redirect: 'stock/info',
+    name: 'stock',
+    meta: { title: '粮食库存管理', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: '/stock/info',
+        name: 'stockInfo',
+        component: () => import('@/views/stock/info'),
+        meta: { title: '库存列表', icon: 'table' }
+      },
+      {
+        path: '/stock/item',
+        name: 'stockItem',
+        component: () => import('@/views/stock/item'),
+        meta: { title: '粮食种类', icon: 'table' }
+      },
+      {
+        path: '/stock/add',
+        name: 'stockAdd',
+        component: () => import('@/views/stock/add'),
+        meta: { title: '添加粮食种类', icon: 'form' },
+        hidden: true
+      },
+      {
+        path: '/stock/edit/:id',
+        name: 'edit',
+        component: () => import('@/views/stock/add'),
+        meta: { title: '编辑粮食种类', noCache: true },
         hidden: true
       }
     ]

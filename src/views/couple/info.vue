@@ -87,25 +87,28 @@
 
       <el-table-column label="蛋数量" align="center">
         <template slot-scope="scope">
-          总计:
-          <span class="count">{{ scope.row.eggTotal }} </span>今年:
+          今年:
           <span class="count" style="padding-right: 2%">{{
             scope.row.eggThisYear
           }}</span>
-          <el-button icon="el-icon-right" circle @click="jumpToEgg"></el-button>
+          总计:
+          <span class="count">{{ scope.row.eggTotal }} </span>
         </template>
       </el-table-column>
 
       <el-table-column label="雏鸟数量" align="center">
         <template slot-scope="scope">
-          总计:<span class="count">{{ scope.row.NestlingTotal }}</span>
           今年:<span class="count" style="padding-right: 2%">{{
             scope.row.nestlingThisYear
           }}</span>
-          <router-link :to="'/couple/info/' + scope.row.id">
-            <el-button icon="el-icon-right" circle></el-button
-          ></router-link>
+          总计:<span class="count">{{ scope.row.nestlingTotal }}</span>
         </template>
+      </el-table-column>
+      <el-table-column label="查看繁殖详情" align="center">
+        <template slot-scope="scope">
+          <router-link :to="'/couple/info/' + scope.row.id">
+            <el-button icon="el-icon-right" circle></el-button></router-link
+        ></template>
       </el-table-column>
 
       <el-table-column label="备注" align="center">
@@ -256,13 +259,17 @@ export default {
     },
     del(row) {
       console.log(row.id);
-      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      }).then(() => {
+      this.$confirm(
+        "此操作将永久删除该种对及该种对相关蛋、雏鸟信息, 是否继续?",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      ).then(() => {
         // 调用删除api
-        avaryInfo
+        couple
           .remove(row.id)
           .then((res) => {
             console.log(res);
