@@ -16,6 +16,7 @@
       </el-form-item>
     </el-form>
     <el-button type="primary" @click="backToBefore">back</el-button>
+    <p>种鸟信息</p>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -24,7 +25,7 @@
       fit
       highlight-current-row
     >
-      <el-table-column align="center" label="序号" width="95">
+      <el-table-column fixed align="center" label="序号" width="95">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
         </template>
@@ -116,72 +117,177 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="table-container">
-      <el-table
-        class="table-inline"
-        v-loading="listLoading1"
-        :data="eggList"
-        element-loading-text="Loading"
-        border
-        fit
-        highlight-current-row
-        @selection-change="handleSelectionChange1"
-        ref="multipleTable"
-      >
-        <el-table-column type="selection" width="55"> </el-table-column>
-        <el-table-column align="center" label="序号" width="95">
-          <template slot-scope="scope">
-            {{ scope.$index + 1 }}
-          </template>
-        </el-table-column>
-        <el-table-column label="第几窝" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.nest }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="第几个" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.count }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="下蛋日期" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.birthday }}
-          </template>
-        </el-table-column>
-        <el-table-column label="是否受精" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.fertilization ? "受精" : "未受精" }}
-          </template>
-        </el-table-column>
-        <el-table-column label="是否出壳" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.hatch ? "出壳" : "未出壳" }}
+    <!-- <div class="table-container"> -->
+    <el-table
+      class="table-inline"
+      v-loading="listLoading1"
+      :data="eggList"
+      element-loading-text="Loading"
+      border
+      fit
+      highlight-current-row
+      @selection-change="handleSelectionChange1"
+      ref="multipleTable"
+      :default-sort="{ prop: 'date' }"
+      style="margin-top: 2%"
+    >
+      <el-table-column type="selection" width="55"> </el-table-column>
+      <el-table-column fixed align="center" label="序号" width="95">
+        <template slot-scope="scope">
+          {{ scope.$index + 1 }}
+        </template>
+      </el-table-column>
+      <el-table-column fixed label="第几窝" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.nest }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column fixed label="第几个" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.count }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="date" sortable label="下蛋日期" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.birthday }}
+        </template>
+      </el-table-column>
+      <el-table-column label="是否受精" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.fertilization ? "受精" : "未受精" }}
+        </template>
+      </el-table-column>
+      <el-table-column label="是否出壳" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.hatch ? "出壳" : "未出壳" }}
+          <el-button
+            v-if="!scope.row.hatch"
+            type="success"
+            plain
+            size="mini"
+            style="padding-bottom: 3px"
+            @click="recordHatch(scope.row)"
+            >出壳</el-button
+          >
+        </template>
+      </el-table-column>
+
+      <el-table-column label="出壳日期" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.hatchDate }}
+        </template>
+      </el-table-column>
+      <el-table-column label="备注" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.otherInfo }}
+        </template>
+      </el-table-column>
+
+      <el-table-column label="照片" align="center">
+        <template slot-scope="scope">
+          <el-popover
+            placement="right"
+            width="400"
+            trigger="click"
+            v-if="scope.row.pic"
+          >
+            <el-image :src="scope.row.pic"></el-image>
+            <el-button slot="reference" size="mini">查看</el-button>
+          </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center">
+        <template slot-scope="scope">
+          <router-link :to="'/egg/edit/' + scope.row.id">
             <el-button
-              v-if="!scope.row.hatch"
-              type="success"
+              @click="editEgg(scope.row)"
+              type="warning"
               plain
               size="mini"
               style="padding-bottom: 3px"
-              @click="recordHatch(scope.row)"
-              >出壳</el-button
-            >
-          </template>
-        </el-table-column>
+              >编辑</el-button
+            ></router-link
+          >
 
-        <el-table-column label="出壳日期" align="center">
+          <el-button
+            type="info"
+            size="mini"
+            plain
+            @click="delEgg(scope.row)"
+            style="padding-bottom: 3px"
+            >删除</el-button
+          >
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-table
+      class="table-inline"
+      v-loading="listLoading2"
+      :data="nestlingList"
+      element-loading-text="Loading"
+      border
+      fit
+      highlight-current-row
+      @selection-change="handleSelectionChange2"
+      ref="multipleTable"
+      style="margin-top: 2%"
+    >
+      <el-table-column type="selection" width="55"> </el-table-column>
+      <el-table-column fixed align="center" label="序号" width="95">
+        <template slot-scope="scope">
+          {{ scope.$index + 1 }}
+        </template>
+      </el-table-column>
+      <el-table-column fixed label="第几窝" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.nest }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column fixed label="第几个" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.count }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="出壳日期" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.birthday }}
+        </template>
+      </el-table-column>
+      <el-table-column label="脚环" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.ring }}
+        </template>
+      </el-table-column>
+      <el-table-column label="性别" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.gender }}
+        </template>
+      </el-table-column>
+      <el-table-column label="是否死亡" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.isDead ? "死亡" : "存活" }}
+        </template>
+      </el-table-column>
+      <el-table-column label="是否离场" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.isOut ? "离场" : "未离场" }}
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="资料库" align="center">
           <template slot-scope="scope">
-            {{ scope.row.hatchDate }}
+            {{ scope.row.isTransfer ? "已添加" : "未添加" }}
           </template>
-        </el-table-column>
-        <el-table-column label="备注" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.otherInfo }}
-          </template>
-        </el-table-column>
+        </el-table-column> -->
 
-        <el-table-column label="照片" align="center">
-          <template slot-scope="scope">
+      <el-table-column label="备注" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.otherInfo }}
+        </template>
+      </el-table-column>
+
+      <el-table-column label="照片" align="center">
+        <template slot-scope="scope">
+          <div class="demo-image__preview">
             <el-popover
               placement="right"
               width="400"
@@ -191,135 +297,33 @@
               <el-image :src="scope.row.pic"></el-image>
               <el-button slot="reference" size="mini">查看</el-button>
             </el-popover>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" align="center">
-          <template slot-scope="scope">
-            <router-link :to="'/egg/edit/' + scope.row.id">
-              <el-button
-                @click="editEgg(scope.row)"
-                type="warning"
-                plain
-                size="mini"
-                style="padding-bottom: 3px"
-                >编辑</el-button
-              ></router-link
-            >
+          </div>
+        </template>
+      </el-table-column>
 
+      <el-table-column label="操作" align="center">
+        <template slot-scope="scope">
+          <router-link :to="'/nestling/edit/' + scope.row.id">
             <el-button
-              type="info"
+              @click="editNestling(scope.row)"
+              type="warning"
               size="mini"
               plain
-              @click="delEgg(scope.row)"
-              style="padding-bottom: 3px"
-              >删除</el-button
-            >
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-table
-        class="table-inline"
-        v-loading="listLoading2"
-        :data="nestlingList"
-        element-loading-text="Loading"
-        border
-        fit
-        highlight-current-row
-        @selection-change="handleSelectionChange2"
-        ref="multipleTable"
-      >
-        <el-table-column type="selection" width="55"> </el-table-column>
-        <el-table-column align="center" label="序号" width="95">
-          <template slot-scope="scope">
-            {{ scope.$index + 1 }}
-          </template>
-        </el-table-column>
-        <el-table-column label="第几窝" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.nest }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="第几个" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.count }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="出壳日期" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.birthday }}
-          </template>
-        </el-table-column>
-        <el-table-column label="脚环" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.ring }}
-          </template>
-        </el-table-column>
-        <el-table-column label="性别" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.gender }}
-          </template>
-        </el-table-column>
-        <el-table-column label="是否死亡" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.isDead ? "死亡" : "存活" }}
-          </template>
-        </el-table-column>
-        <el-table-column label="是否离场" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.isOut ? "离场" : "未离场" }}
-          </template>
-        </el-table-column>
-        <!-- <el-table-column label="资料库" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.isTransfer ? "已添加" : "未添加" }}
-          </template>
-        </el-table-column> -->
+              >编辑</el-button
+            ></router-link
+          >
 
-        <el-table-column label="备注" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.otherInfo }}
-          </template>
-        </el-table-column>
-
-        <el-table-column label="照片" align="center">
-          <template slot-scope="scope">
-            <div class="demo-image__preview">
-              <el-popover
-                placement="right"
-                width="400"
-                trigger="click"
-                v-if="scope.row.pic"
-              >
-                <el-image :src="scope.row.pic"></el-image>
-                <el-button slot="reference" size="mini">查看</el-button>
-              </el-popover>
-            </div>
-          </template>
-        </el-table-column>
-
-        <el-table-column label="操作" align="center">
-          <template slot-scope="scope">
-            <router-link :to="'/nestling/edit/' + scope.row.id">
-              <el-button
-                @click="editNestling(scope.row)"
-                type="warning"
-                size="mini"
-                plain
-                >编辑</el-button
-              ></router-link
-            >
-
-            <el-button
-              type="info"
-              size="mini"
-              @click="delNestling(scope.row)"
-              plain
-              >删除</el-button
-            >
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
+          <el-button
+            type="info"
+            size="mini"
+            @click="delNestling(scope.row)"
+            plain
+            >删除</el-button
+          >
+        </template>
+      </el-table-column>
+    </el-table>
+    <!-- </div> -->
     <el-button type="info" size="mini" @click="addNewEgg()"
       >添加蛋确认</el-button
     >

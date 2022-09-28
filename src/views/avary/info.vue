@@ -66,17 +66,17 @@
       ref="multipleTable"
     >
       <el-table-column type="selection" width="55"> </el-table-column>
-      <el-table-column align="center" label="序号" width="95">
+      <el-table-column fixed align="center" label="序号" width="95">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="脚环号" align="center">
+      <el-table-column fixed label="脚环号" align="center">
         <template slot-scope="scope">
           {{ scope.row.ring }}
         </template>
       </el-table-column>
-      <el-table-column label="昵称" align="center">
+      <el-table-column fixed label="昵称" align="center">
         <template slot-scope="scope">
           {{ scope.row.nickname }}
         </template>
@@ -176,7 +176,7 @@
           </div> -->
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center">
+      <el-table-column fixed="right" label="操作" align="center">
         <template slot-scope="scope">
           <router-link :to="'/avary/edit/' + scope.row.id">
             <el-button @click="edit(scope.row)" type="warning" size="mini"

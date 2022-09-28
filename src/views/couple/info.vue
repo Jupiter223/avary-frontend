@@ -42,22 +42,22 @@
       fit
       highlight-current-row
     >
-      <el-table-column align="center" label="序号" width="95">
+      <el-table-column fixed align="center" label="序号" width="95">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="公脚环号" align="center">
+      <el-table-column fixed label="公脚环号" align="center">
         <template slot-scope="scope">
           {{ scope.row.parentList[0].ring }}
         </template>
       </el-table-column>
-      <el-table-column label="母脚环号" align="center">
+      <el-table-column fixed label="母脚环号" align="center">
         <template slot-scope="scope">
           {{ scope.row.parentList[1].ring }}
         </template>
       </el-table-column>
-      <el-table-column label="昵称" align="center">
+      <el-table-column fixed label="昵称" align="center">
         <template slot-scope="scope">
           {{ scope.row.parentList[0].nickname }}
         </template>

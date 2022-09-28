@@ -123,7 +123,7 @@
           <el-upload
             class="upload-demo"
             drag
-            action="http://localhost:8081/fileoss"
+            action="http://192.168.50.130/fileoss"
             multiple
             :on-preview="handlePreview"
             :on-success="handleSucessCard"
@@ -257,7 +257,7 @@ export default {
             type: "success",
             message: "编辑成功!",
           });
-          // this.$router.push({ path: "/" }); //跳转返回?
+
           this.$router.go(-1);
         })
         .catch((res) => {

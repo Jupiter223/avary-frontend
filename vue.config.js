@@ -30,6 +30,7 @@ module.exports = {
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
   devServer: {
+    host: "0.0.0.0",
     port: port,
     open: true,
     overlay: {
@@ -44,6 +45,7 @@ module.exports = {
     name: name,
     resolve: {
       alias: {
+        vue$: "vue/dist/vue.esm.js",
         '@': resolve('src')
       }
     }
@@ -87,7 +89,7 @@ module.exports = {
             .plugin('ScriptExtHtmlWebpackPlugin')
             .after('html')
             .use('script-ext-html-webpack-plugin', [{
-            // `runtime` must same as runtimeChunk name. default is `runtime`
+              // `runtime` must same as runtimeChunk name. default is `runtime`
               inline: /runtime\..*\.js$/
             }])
             .end()

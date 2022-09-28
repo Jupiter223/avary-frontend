@@ -6,6 +6,7 @@
         <el-input v-model="form.ring" />
         <el-popover placement="right" width="400" trigger="click">
           <i>点击选中卡片</i>
+
           <el-image
             v-for="card in cards"
             :key="card"
@@ -93,7 +94,7 @@
           <el-upload
             class="upload-demo"
             drag
-            action="http://localhost:8081/fileoss"
+            action="http://192.168.50.130/fileoss"
             multiple
             :on-preview="handlePreview"
             :on-success="handleSucessCard"
@@ -127,7 +128,7 @@
           <el-upload
             class="upload-demo"
             drag
-            action="http://localhost:8081/fileoss"
+            action="http://192.168.50.130:8081/fileoss"
             :on-success="handleSucessAvary"
             multiple
             style="

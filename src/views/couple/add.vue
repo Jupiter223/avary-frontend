@@ -74,7 +74,7 @@
           <el-upload
             class="upload-demo"
             drag
-            action="http://localhost:8081/fileoss"
+            action="http://192.168.50.130:8081/fileoss"
             multiple
             :on-preview="handlePreview"
             :on-success="handleSucessCard"
@@ -108,7 +108,7 @@
           <el-upload
             class="upload-demo"
             drag
-            action="http://localhost:8081/fileoss"
+            action="http://192.168.50.130:8081/fileoss"
             :on-success="handleSucessAvary"
             multiple
             style="
