@@ -164,7 +164,7 @@
       </el-table-column>
     </el-table>
 
-    <div style="margin-top: 20px">
+    <!-- <div style="margin-top: 20px">
       <el-button @click="toggleSelection([list[1], list[2]])"
         >切换第二、第三行的选中状态</el-button
       >
@@ -172,7 +172,7 @@
 
       <el-button @click="egg()">生蛋</el-button>
       <el-button @click="toggleSelection()">取消选择</el-button>
-    </div>
+    </div> -->
 
     <div class="block" style="padding-left: 38%">
       <el-pagination

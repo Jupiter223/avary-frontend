@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-text">name: {{ name }}</div>
-    <el-calendar v-model="value" style="width: 80%; margin: auto">
+    <el-calendar v-model="value">
       <template slot="dateCell" slot-scope="{ date, data }" class="calItem">
         <div class="cell" @click="clickCell(data.day)">
           <p :class="data.isSelected ? 'is-selected' : ''">
