@@ -142,19 +142,19 @@ export const constantRoutes = [
         meta: { title: '种鸟详情', icon: 'form' },
         hidden: true
       },
-      {
-        path: '/couple/add',
-        name: 'add',
-        component: () => import('@/views/couple/add'),
-        meta: { title: '添加对鸟', icon: 'form' }
-      },
-      {
-        path: '/couple/edit/:id',
-        name: 'edit',
-        component: () => import('@/views/couple/add'),
-        meta: { title: '编辑对鸟', noCache: true },
-        hidden: true
-      }
+      // {
+      //   path: '/couple/add',
+      //   name: 'add',
+      //   component: () => import('@/views/couple/add'),
+      //   meta: { title: '添加对鸟', icon: 'form' }
+      // },
+      // {
+      //   path: '/couple/edit/:id',
+      //   name: 'edit',
+      //   component: () => import('@/views/couple/add'),
+      //   meta: { title: '编辑对鸟', noCache: true },
+      //   hidden: true
+      // }
     ]
   },
   {
